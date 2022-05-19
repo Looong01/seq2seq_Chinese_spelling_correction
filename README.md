@@ -33,11 +33,11 @@ conda activate Web_Search_Tech
 train.sh
 ```
 
-* predict
+* infer
 ```
 cd <当前代码相对路径>
 conda activate Web_Search_Tech
-predict.sh
+infer.sh
 ```
 
 #### 参与贡献

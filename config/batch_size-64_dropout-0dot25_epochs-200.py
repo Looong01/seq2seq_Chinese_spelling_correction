@@ -28,10 +28,11 @@ test_path = os.path.join(data_dir, 'test.txt')
 arch = 'seq2seq'
 
 # config
-src_vocab_path = os.path.join(pwd_path, 'data/vocab_source.txt')
-trg_vocab_path = os.path.join(pwd_path, 'data/vocab_target.txt')
+src_vocab_path = os.path.join(data_dir, 'vocab_source.txt')
+trg_vocab_path = os.path.join(data_dir, 'vocab_target.txt')
 model_path = os.path.join(output_dir, 'model_batch_size-{}_dropout-{}_epochs-{}.pth'.format(batch_size, dropout, epochs))
-log_path = os.path.join(output_dir, 'model_batch_size-{}_dropout-{}_epochs-{}.log'.format(batch_size, dropout, epochs))
+trainlog_path = os.path.join(output_dir, 'batch_size-{}_dropout-{}_epochs-{}.log'.format(batch_size, dropout, epochs))
+inferlog_path = os.path.join(pwd_path, 'output/infer/batch_size-{}_dropout-{}_epochs-{}/batch_size-{}_dropout-{}_epochs-{}.log'.format(batch_size, dropout, epochs, batch_size, dropout, epochs))
 
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)

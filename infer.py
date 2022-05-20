@@ -21,9 +21,10 @@ print('device: %s' % device)
 with open(config.inferlog_path,"w") as f:
     f.write('device: %s' % device)
 
+
 class Inference(object):
     def __init__(self, arch, model_path, src_vocab_path, trg_vocab_path,
-                 embed_size=50, hidden_size=50, dropout=0.5, max_length=128):
+                 embed_size, hidden_size, dropout, max_length):
         self.src_2_ids = load_word_dict(src_vocab_path)
         self.trg_2_ids = load_word_dict(trg_vocab_path)
         self.id_2_trgs = {v: k for k, v in self.trg_2_ids.items()}
@@ -67,11 +68,12 @@ if __name__ == "__main__":
                   config.model_path,
                   config.src_vocab_path,
                   config.trg_vocab_path,
-                  embed_size=config.embed_size,
-                  hidden_size=config.hidden_size,
-                  dropout=config.dropout,
-                  max_length=config.max_length
+                  config.embed_size,
+                  config.hidden_size,
+                  config.dropout,
+                  config.max_length
                   )
+
     src = []
     tgt = []
     fr = open(config.test_path,'r')
@@ -86,10 +88,9 @@ if __name__ == "__main__":
         print('predict:', m.predict(q))
         print('target: ', tgt[id])
         print()
-        with open(config.inferlog_path,"w") as f:
+        with open(config.inferlog_path,"a") as f:
             f.write('\ninput  :',q)
             f.write('\npredict:', m.predict(q))
             f.write('\ntarget: ', tgt[id])
             f.write()
-
 

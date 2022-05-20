@@ -2,21 +2,24 @@
 
 import os
 import sys
-import pandas as pd
+import importlib
 import numpy as np
 import torch
 
 sys.path.append('../..')
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
-import config
 from data_reader import SOS_TOKEN, EOS_TOKEN
 from data_reader import load_word_dict
 from seq2seq import Seq2Seq
 
+config_name, ext = os.path.splitext(os.path.basename(sys.argv[1]))
+config = importlib.import_module("config." + config_name)
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print('device: %s' % device)
-
+with open(config.inferlog_path,"w") as f:
+    f.write('device: %s' % device)
 
 class Inference(object):
     def __init__(self, arch, model_path, src_vocab_path, trg_vocab_path,
@@ -52,7 +55,8 @@ class Inference(object):
 
         for word in translation:
             if word != EOS_TOKEN:
-                result.append(word)
+                # result.append(word)
+                result.append(word + ' ')
             else:
                 break
         return ''.join(result)
@@ -68,13 +72,24 @@ if __name__ == "__main__":
                   dropout=config.dropout,
                   max_length=config.max_length
                   )
-
-    test_inputs = pd.read_csv('data/test.tsv',sep='\t')
-    src = [x for x in test_inputs['#src']]
-    tgt = [x for x in test_inputs['target']]
+    src = []
+    tgt = []
+    fr = open(config.test_path,'r')
+    for line in fr:
+        line = line.strip('\n')
+        line = line.split('\t')
+        src.append(line[0])
+        tgt.append(line[1])
+    
     for id, q, in enumerate(src) :
         print('input  :',q)
         print('predict:', m.predict(q))
         print('target: ', tgt[id])
         print()
+        with open(config.inferlog_path,"w") as f:
+            f.write('\ninput  :',q)
+            f.write('\npredict:', m.predict(q))
+            f.write('\ntarget: ', tgt[id])
+            f.write()
+
 

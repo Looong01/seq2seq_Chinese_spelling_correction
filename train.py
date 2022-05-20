@@ -13,7 +13,7 @@ sys.path.append('../..')
 from data_reader import gen_examples
 from data_reader import read_vocab, create_dataset, one_hot, save_word_dict, load_word_dict
 from seq2seq import Seq2Seq, LanguageModelCriterion
- 
+
 config_name, ext = os.path.splitext(os.path.basename(sys.argv[1]))
 config = importlib.import_module("config." + config_name)
 

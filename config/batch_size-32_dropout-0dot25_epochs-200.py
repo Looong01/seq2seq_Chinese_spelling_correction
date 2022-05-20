@@ -15,15 +15,16 @@ pwd_path = os.path.abspath(os.path.dirname(__file__) + '/../')
 
 # Training data path.
 
-sighan_train_path = os.path.join(pwd_path, 'data/train.tsv')
+data_dir = os.path.join(pwd_path, 'data')
 
 output_dir = os.path.join(pwd_path, 'output/batch_size-{}_dropout-{}_epochs-{}'.format(batch_size, dropout, epochs))
 # Training data path.
-train_path = os.path.join(pwd_path, 'data/train.txt')
+train_path = os.path.join(data_dir, 'train.txt')
 # Validation data path.
-test_path = os.path.join(pwd_path, 'data/valid.txt')
+valid_path = os.path.join(data_dir, 'valid.txt')
+# Validation data path.
+test_path = os.path.join(data_dir, 'test.txt')
 
-dataset = 'sighan'
 arch = 'seq2seq'
 
 # config

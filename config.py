@@ -6,6 +6,7 @@ pwd_path = os.path.abspath(os.path.dirname(__file__))
 
 
 data_dir = os.path.join(pwd_path, 'data')
+
 output_dir = os.path.join(pwd_path, 'output')
 # Training data path.
 train_path = os.path.join(data_dir, 'train.txt')
@@ -19,7 +20,6 @@ arch = 'seq2seq'
 src_vocab_path = os.path.join(data_dir, 'vocab_source.txt')
 trg_vocab_path = os.path.join(data_dir, 'vocab_target.txt')
 model_path = os.path.join(output_dir, 'model_{}.pth'.format(arch))
-
 
 batch_size = 32
 epochs = 200

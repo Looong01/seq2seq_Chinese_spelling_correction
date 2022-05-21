@@ -1,26 +1,25 @@
 # -*- coding: utf-8 -*-
 
-import os
+# import os
 import sys
-import importlib
+# import importlib
 
 import torch
 from sklearn.model_selection import train_test_split
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+# gpu_id = str(sys.argv[2])
+# os.environ["CUDA_VISIBLE_DEVICES"] = gpu_id
 sys.path.append('../..')
 
 from data_reader import gen_examples
 from data_reader import read_vocab, create_dataset, one_hot, save_word_dict, load_word_dict
 from seq2seq import Seq2Seq, LanguageModelCriterion
  
-config_name, ext = os.path.splitext(os.path.basename(sys.argv[1]))
-config = importlib.import_module("config." + config_name)
+# config_name, ext = os.path.splitext(os.path.basename(sys.argv[1]))
+# config = importlib.import_module("config." + config_name)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print('device: %s' % device)
-with open(config.trainlog_path,"w") as f:
-    f.write('device: %s' % device)
 
 def evaluate_seq2seq_model(model, data, device, loss_fn, log_path):
     model.eval()
@@ -122,6 +121,9 @@ def train(arch, train_path, batch_size, embed_size, hidden_size, dropout, epochs
     k = 0
     print('src:', ' '.join([id_2_srcs[i] for i in train_src[k]]))
     print('trg:', ' '.join([id_2_trgs[i] for i in train_trg[k]]))
+    with open(log_path,"a") as f:
+        f.write('src:' + ' '.join([id_2_srcs[i] for i in train_src[k]]))
+        f.write('trg:' + ' '.join([id_2_trgs[i] for i in train_trg[k]]))
 
     train_data = gen_examples(train_src, train_trg, batch_size, max_length)
     if arch == 'seq2seq':
@@ -138,19 +140,3 @@ def train(arch, train_path, batch_size, embed_size, hidden_size, dropout, epochs
         optimizer = torch.optim.Adam(model.parameters())
 
         train_seq2seq_model(model, train_data, device, loss_fn, optimizer, model_path, epochs, log_path)
-
-
-if __name__ == '__main__':
-    train(config.arch,
-          config.train_path,
-          config.batch_size,
-          config.embed_size,
-          config.hidden_size,
-          config.dropout,
-          config.epochs,
-          config.src_vocab_path,
-          config.trg_vocab_path,
-          config.model_path,
-          config.max_length,
-          config.trainlog_path
-          )

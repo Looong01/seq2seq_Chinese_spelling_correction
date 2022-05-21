@@ -1,26 +1,25 @@
 # -*- coding: utf-8 -*-
 
-import os
+# import os
 import sys
-import importlib
+# import importlib
 import numpy as np
 import torch
 
 sys.path.append('../..')
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
+# gpu_id = str(sys.argv[2])
+# os.environ["CUDA_VISIBLE_DEVICES"] = gpu_id
 
 from data_reader import SOS_TOKEN, EOS_TOKEN
 from data_reader import load_word_dict
 from seq2seq import Seq2Seq
 
-config_name, ext = os.path.splitext(os.path.basename(sys.argv[1]))
-config = importlib.import_module("config." + config_name)
+# config_name, ext = os.path.splitext(os.path.basename(sys.argv[1]))
+# config = importlib.import_module("config." + config_name)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print('device: %s' % device)
-with open(config.inferlog_path,"w") as f:
-    f.write('device: %s' % device)
-
 
 class Inference(object):
     def __init__(self, arch, model_path, src_vocab_path, trg_vocab_path,
@@ -61,36 +60,3 @@ class Inference(object):
             else:
                 break
         return ''.join(result)
-
-
-if __name__ == "__main__":
-    m = Inference(config.arch,
-                  config.model_path,
-                  config.src_vocab_path,
-                  config.trg_vocab_path,
-                  config.embed_size,
-                  config.hidden_size,
-                  config.dropout,
-                  config.max_length
-                  )
-
-    src = []
-    tgt = []
-    fr = open(config.test_path,'r')
-    for line in fr:
-        line = line.strip('\n')
-        line = line.split('\t')
-        src.append(line[0])
-        tgt.append(line[1])
-    
-    for id, q, in enumerate(src) :
-        print('input  :',q)
-        print('predict:', m.predict(q))
-        print('target: ', tgt[id])
-        print()
-        with open(config.inferlog_path,"a") as f:
-            f.write('\ninput  :',q)
-            f.write('\npredict:', m.predict(q))
-            f.write('\ntarget: ', tgt[id])
-            f.write()
-

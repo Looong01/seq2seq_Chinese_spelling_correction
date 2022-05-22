@@ -20,7 +20,7 @@ Web_Search_Tech期末大作业
 conda create -n Web_Search_Tech python=3.9
 conda activate Web_Search_Tech
 conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
-conda install scikit-learn
+conda install scikit-learn pandas matplotlib
 pip install pycorrector
 ```
 

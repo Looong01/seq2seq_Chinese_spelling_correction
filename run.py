@@ -13,11 +13,13 @@ F1_path = os.path.join(config.results_path, 'F1.txt')
 with open(F1_path, 'w') as f:
     f.truncate(0)
 
-for j in range(5):
+for j in range(6):
     batch_size *= 2
     epochs +=3000
-    for i in range(5):
+    dropout = 0
+    for i in range(6):
         dropout += 0.05
+        dropout = round(dropout, 2)
         name = 'batch_size-{}_dropout-{}_epochs-{}'.format(batch_size, dropout, epochs)
         model_path = os.path.join(config.models_path, name + '.pth')
         trainlog_path = os.path.join(config.trainlogs_path, name + '.log')

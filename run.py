@@ -1,61 +1,63 @@
-import os
-import sys
-import config
-import train
-import infer
-import evaluation
+# -*- coding: utf-8 -*-
 
-batch_size = 16
+import os
+from tools.config import *
+from tools.train import train
+from tools.infer import Inference
+from tools.evaluation import evaluation
+
+batch_size = 8
 dropout = 0
 epochs = 2000
 
-F1_path = os.path.join(config.results_path, 'F1.txt')
+F1_path = os.path.join(results_path, 'F1.txt')
 with open(F1_path, 'w') as f:
     f.truncate(0)
 
 for j in range(6):
     batch_size *= 2
-    epochs +=3000
+    epochs +=2500
     dropout = 0
-    for i in range(6):
+    for i in range(20):
         dropout += 0.05
         dropout = round(dropout, 2)
+        print(batch_size, dropout, epochs)
         name = 'batch_size-{}_dropout-{}_epochs-{}'.format(batch_size, dropout, epochs)
-        model_path = os.path.join(config.models_path, name + '.pth')
-        trainlog_path = os.path.join(config.trainlogs_path, name + '.log')
-        inferlog_path = os.path.join(config.inferlogs_path, name + '.log')
-        predict_path = os.path.join(config.predicts_path, name + '.txt')
-        result_path = os.path.join(config.results_path, name + '.txt')
+        model_path = os.path.join(models_path, name + '.pth')
+        trainlog_path = os.path.join(trainlogs_path, name + '.log')
+        inferlog_path = os.path.join(inferlogs_path, name + '.log')
+        predict_path = os.path.join(predicts_path, name + '.txt')
+        result_path = os.path.join(results_path, name + '.txt')
 
-        train.train(config.arch,
-            config.train_path,
+        train(arch,
+            train_path,
             batch_size,
-            config.embed_size,
-            config.hidden_size,
+            embed_size,
+            hidden_size,
             dropout,
             epochs,
-            config.src_vocab_path,
-            config.trg_vocab_path,
+            src_vocab_path,
+            trg_vocab_path,
             model_path,
-            config.max_length,
+            max_length,
             trainlog_path
             )
 
         with open(predict_path,"w") as f:
             f.truncate(0)
         
-        m = infer.Inference(config.arch,
+        m = Inference(arch,
                   model_path,
-                  config.src_vocab_path,
-                  config.trg_vocab_path,
-                  config.embed_size,
-                  config.hidden_size,
+                  src_vocab_path,
+                  trg_vocab_path,
+                  embed_size,
+                  hidden_size,
                   dropout,
-                  config.max_length
+                  max_length
                   )
         src = []
         tgt = []
-        fr = open(config.test_path,'r')
+        fr = open(test_path,'r')
         for line in fr:
             line = line.strip('\n')
             line = line.split('\t')
@@ -73,7 +75,7 @@ for j in range(6):
             with open(predict_path,"a") as f:
                 f.write(m.predict(q) + '\n')
         
-        TP,FP,TN,FN, precision,recall,F1 = evaluation.evaluation(predict_path,'data/test.txt')
+        TP,FP,TN,FN, precision,recall,F1 = evaluation(predict_path,'data/test.txt')
         print("TP:",TP,'FP:',FP,'TN:',TN,'FN:',FN)
         print('Precision:',precision)
         print('Recall:',recall)
@@ -85,7 +87,7 @@ for j in range(6):
             f.write('\nRecall: ' + str(recall))
             f.write('\nF1: ' + str(F1))
         try:
-            os.rename(result_path, '(' + F1 + ') ' + result_path)
+            os.rename(result_path, '(' + str(F1) + ') ' + result_path)
         except Exception as e:
             print(e)
         with open(F1_path,"a") as f:

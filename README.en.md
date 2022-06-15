@@ -1,7 +1,7 @@
-# Seq2Seq中文拼写纠错
+# Seq2Seq Chinese-Spelling-Correction
 
 #### Description
-Web_Search_Tech期末大作业
+Web_Search_Tech Terminal Coursework
 
 #### Software Architecture
 *  Chinese typo correction model based on equence to Sequence  
@@ -26,14 +26,14 @@ pip install pycorrector
 
 #### Instructions
 
-* train
+* Training
 ```
 cd <the path of this project>
 conda activate Web_Search_Tech
 train.sh
 ```
 
-* infer
+* Inference
 ```
 cd <the path of this project>
 conda activate Web_Search_Tech

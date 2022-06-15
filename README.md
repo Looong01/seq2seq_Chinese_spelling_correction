@@ -15,7 +15,7 @@ Web_Search_Tech期末大作业
 
 #### 安装教程
 
-* pip安装依赖包
+* `pip`安装依赖包
 ```
 conda create -n Web_Search_Tech python=3.9
 conda activate Web_Search_Tech
@@ -26,14 +26,14 @@ pip install pycorrector
 
 #### 使用说明
 
-* train
+* Training
 ```
 cd <当前代码相对路径>
 conda activate Web_Search_Tech
 train.sh
 ```
 
-* infer
+* Inference
 ```
 cd <当前代码相对路径>
 conda activate Web_Search_Tech
